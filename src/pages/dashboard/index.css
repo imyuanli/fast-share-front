@@ -1,0 +1,60 @@
+.header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  height: 60px;
+  z-index: 9;
+  align-items: center;
+  background-color: #fff;
+  width: 100%;
+}
+
+.logoBox {
+  margin-left: 20px;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+}
+
+.popover {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  color: #999;
+  margin-right: 20px;
+  cursor: pointer;
+  height: 100%;
+}
+
+.popover:hover {
+  background-color: #f9f9fc;
+  color: #1890ff;
+}
+
+.popoverLi:hover {
+  background-color: #f9f9fc;
+  color: #1890ff;
+  cursor: pointer;
+  width: 100%;
+}
+
+.main {
+  background-color: #F0F2F5;
+  display: flex;
+  height: 100%;
+}
+
+.menu {
+  width: 200px;
+  height: 100%;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+}
+
+
+
