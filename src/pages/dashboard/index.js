@@ -1,16 +1,31 @@
 import React, { PureComponent } from 'react';
 import { Avatar, Input, Layout, Popover, Tooltip } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { LoginOutlined, UserOutlined } from '@ant-design/icons';
 import style from './index.css';
 import Sider from '../../components/Sider';
 import Content from '../../components/Content';
-
+import { Link } from 'umi';
+import store from 'store'
 const { Search } = Input;
 
 class Index extends PureComponent {
+  state = {
+    isLogin: false,
+  };
+  componentDidMount() {
+    if(store.get("token")){
+      this.setState({isLogin:true})
+    }
+  }
+
   onSearch = value => console.log(value);
 
+  signOut=()=>{
+    store.remove("token")
+    this.setState({isLogin:false})
+  }
   render() {
+    const { isLogin } = this.state;
     return (
       <>
         <Layout hasSider>
@@ -36,13 +51,20 @@ class Index extends PureComponent {
                   content={
                     <div
                       className={style.popoverLi}
-                      // onClick={this.handleClickMenu}
                     >
-                      <span>Sign out</span>
+                      {
+                        isLogin ?
+                          <span onClick={this.signOut}>Sign out<LoginOutlined /></span>
+                          :
+                          <Link to='/login'>
+                            <span>Sign in</span>
+                          </Link>
+                      }
+
                     </div>
                   }>
-                  <span>姓名</span>
-                  <Avatar style={{ marginLeft: 8 }} icon={<UserOutlined />} />
+                  {isLogin && <span>姓名</span>}
+                  <Avatar icon={<UserOutlined />} />
                 </Popover>
               </div>
             </div>

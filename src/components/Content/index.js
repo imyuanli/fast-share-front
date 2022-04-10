@@ -1,8 +1,15 @@
 import React, { PureComponent } from 'react';
-import { Avatar, Card, Col, List, Row } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import { Avatar, Card, Col, List, Row, Tooltip } from 'antd';
+import {
+  EditOutlined,
+  EllipsisOutlined,
+  EyeOutlined,
+  HeartOutlined,
+  LinkOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
 import style from './index.css';
-
+import {Link} from 'umi'
 const { Meta } = Card;
 
 class Index extends PureComponent {
@@ -49,26 +56,33 @@ class Index extends PureComponent {
                       className={style.listItem}
                     >
                       <Col xs={8} sm={8} md={8} lg={8} xl={8}>
-                        <Card
-                          style={{ width: 320 }}
-                          cover={
-                            <img
-                              alt='example'
-                              src='https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png'
+                        <Link>
+                          <Card
+                            bodyStyle={{
+                              height:200,
+                              overflow:'hidden'
+                            }}
+                            style={{ width: 320 }}
+                            actions={[
+                              <Tooltip title='收藏'>
+                                <HeartOutlined />
+                              </Tooltip>,
+                              <Tooltip title='分享'>
+                                <LinkOutlined />
+                              </Tooltip>,
+                              <Tooltip title='访问'>
+                                <EyeOutlined />
+                              </Tooltip>
+                            ]}
+                            className={style.card}
+                          >
+                            <Meta
+                              avatar={<Avatar src='https://joeschmoe.io/api/v1/random' />}
+                              title='Card title'
+                              description='This is the descriptionThis is the descriptionThis is the descriptionThis is the descriptionThis is the descriptionThis is the description'
                             />
-                          }
-                          actions={[
-                            <SettingOutlined key='setting' />,
-                            <EditOutlined key='edit' />,
-                            <EllipsisOutlined key='ellipsis' />,
-                          ]}
-                        >
-                          <Meta
-                            avatar={<Avatar src='https://joeschmoe.io/api/v1/random' />}
-                            title='Card title'
-                            description='This is the description'
-                          />
-                        </Card>
+                          </Card>
+                        </Link>
                       </Col>
                     </List.Item>
                   )}

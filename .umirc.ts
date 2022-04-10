@@ -5,10 +5,16 @@ export default defineConfig({
     type: 'none',
   },
   routes: [
-    { path: '/',
+    {
+      path: '/',
       component: '@/pages/dashboard',
       exact: true,
       title: '首页',
+    },
+    { path: '/login',
+      component: '@/pages/login',
+      exact: true,
+      title: '登录',
     },
   ],
   fastRefresh: {},
