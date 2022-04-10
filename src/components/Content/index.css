@@ -1,0 +1,29 @@
+
+.main {
+  background-color: #F0F2F5;
+  display: flex;
+  min-height: 100vh;
+  margin-top: 65px;
+}
+
+.contentTitle {
+  width: 100%;
+  background-color: white;
+  margin-bottom: 10px;
+  font-size: 25px;
+  padding: 10px;
+}
+
+.cardBox {
+
+}
+
+.cardImg {
+  width: 80px;
+  height: 80px;
+
+}
+
+.listItem {
+  padding: 0;
+}
