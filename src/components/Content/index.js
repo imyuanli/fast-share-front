@@ -14,11 +14,10 @@ class Index extends PureComponent {
   };
 
   render() {
-    const { source_list, section_list } = this.props;
+    const { source_list } = this.props;
     return (
       <div className={style.content}>
-        <div className={style.contentTitle}>推荐</div>
-        <Row gutter={24} style={{ margin: 0 }}>
+        <Row gutter={24} style={{ margin: "10 0 0 0" }}>
           <Col xs={18} sm={18} md={18} lg={18} xl={18}>
             <List
               grid={{
