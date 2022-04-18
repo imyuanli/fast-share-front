@@ -13,19 +13,14 @@ import {Link} from 'umi'
 const { Meta } = Card;
 
 class Index extends PureComponent {
+
+  locationChage=(url)=>{
+    window.location.href = url
+    window.e.returnValue = false;
+  }
   render() {
-    const listData = [];
-    for (let i = 0; i < 23; i++) {
-      listData.push({
-        href: 'https://ant.design',
-        title: `ant design part ${i}`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description:
-          'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-        content:
-          'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-      });
-    }
+    const {source_list,section_list} = this.props
+
     return (
       <div className={style.content}>
         <div className={style.contentTitle}>推荐</div>
@@ -49,40 +44,37 @@ class Index extends PureComponent {
                     },
                     pageSize: 9,
                   }}
-                  dataSource={listData}
-                  renderItem={item => (
+                  dataSource={source_list}
+                  renderItem={(item,index) => (
                     <List.Item
-                      key={item.title}
+                      key={index}
                       className={style.listItem}
                     >
                       <Col xs={8} sm={8} md={8} lg={8} xl={8}>
-                        <Link>
-                          <Card
-                            bodyStyle={{
-                              height:200,
-                              overflow:'hidden'
-                            }}
-                            style={{ width: 320 }}
-                            actions={[
-                              <Tooltip title='收藏'>
-                                <HeartOutlined />
-                              </Tooltip>,
-                              <Tooltip title='分享'>
-                                <LinkOutlined />
-                              </Tooltip>,
-                              <Tooltip title='访问'>
-                                <EyeOutlined />
-                              </Tooltip>
-                            ]}
-                            className={style.card}
-                          >
+                        <Card
+                          bodyStyle={{
+                            height:200,
+                            overflow:'hidden'
+                          }}
+                          style={{ width: 320 }}
+                          actions={[
+                            <Tooltip title='分享'>
+                              <LinkOutlined />
+                            </Tooltip>,
+                            <Tooltip title='前往'>
+                              <EyeOutlined onClick={()=>{this.locationChage(item.source_url)}} />
+                            </Tooltip>
+                          ]}
+                          className={style.card}
+                        >
+                          <Link to={`/source/${item.source_id}`}>
                             <Meta
-                              avatar={<Avatar src='https://joeschmoe.io/api/v1/random' />}
-                              title='Card title'
-                              description='This is the descriptionThis is the descriptionThis is the descriptionThis is the descriptionThis is the descriptionThis is the description'
+                              avatar={<Avatar src={item.author_avatar}/>}
+                              title={item.source_title}
+                              description={item.source_desc}
                             />
-                          </Card>
-                        </Link>
+                          </Link>
+                        </Card>
                       </Col>
                     </List.Item>
                   )}

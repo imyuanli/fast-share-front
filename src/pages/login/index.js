@@ -3,13 +3,15 @@ import { Button, Card, Form, Input, message, Modal } from 'antd';
 import style from './index.css';
 import { InfoCircleOutlined, KeyOutlined, MailOutlined } from '@ant-design/icons';
 import store from 'store'
+import { get_login, get_login_code } from '../../service/service';
 const { Meta } = Card;
 const FormItem = Form.Item;
+import {history} from 'umi'
 export default class Index extends PureComponent {
   state = {
     login: true,
     email: '',
-    code: '',
+    login_code: '',
     timer: 60 ,
   };
   componentDidMount() {
@@ -22,15 +24,21 @@ export default class Index extends PureComponent {
     });
   };
   loginInfo = () => {
-    const { email, code } = this.state;
+    const { email, login_code } = this.state;
     if (!email) {
       message.warn('邮箱不能为空');
       return;
     }
-    if (!code) {
+    if (!login_code) {
       message.warn('验证码不能为空');
       return;
     }
+    get_login({email,login_code}).then((res)=>{
+      if(res){
+        store.set("token",res.token)
+        history.push("/")
+      }
+    })
   };
 
   getLoginCode = () => {
@@ -57,6 +65,12 @@ export default class Index extends PureComponent {
         })
       }
     }, 1000)
+
+    get_login_code({email}).then(
+      (res)=>{
+        console.log(res);
+      }
+    )
   };
 
   render() {
@@ -84,7 +98,7 @@ export default class Index extends PureComponent {
           <Input
             placeholder='验证码'
             className={style.inputItem}
-            onChange={e => this.setState({ code: e.target.value })}
+            onChange={e => this.setState({ login_code: e.target.value })}
             prefix={<KeyOutlined />}
             suffix={
               timer == 60?
