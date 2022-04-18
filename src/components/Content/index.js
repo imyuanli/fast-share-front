@@ -1,86 +1,81 @@
 import React, { PureComponent } from 'react';
 import { Avatar, Card, Col, List, Row, Tooltip } from 'antd';
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  EyeOutlined,
-  HeartOutlined,
-  LinkOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { EyeOutlined, LinkOutlined } from '@ant-design/icons';
 import style from './index.css';
-import {Link} from 'umi'
+import { Link } from 'umi';
+
 const { Meta } = Card;
 
 class Index extends PureComponent {
 
-  locationChage=(url)=>{
-    window.location.href = url
-    window.e.returnValue = false;
-  }
-  render() {
-    const {source_list,section_list} = this.props
+  locationChage = (url) => {
+    window.location.href = url;
+    window.returnValue = false;
+  };
 
+  render() {
+    const { source_list, section_list } = this.props;
     return (
       <div className={style.content}>
         <div className={style.contentTitle}>推荐</div>
         <Row gutter={24} style={{ margin: 0 }}>
           <Col xs={18} sm={18} md={18} lg={18} xl={18}>
-            <div className={style.contentLeft}>
-              <Row gutter={24}>
-                <List
-                  grid={{
-                    gutter: 24,
-                    xs: 1,
-                    sm: 2,
-                    md: 3,
-                    lg: 3,
-                    xl: 3,
-                    xxl: 3,
-                  }}
-                  pagination={{
-                    onChange: page => {
-                      console.log(page);
-                    },
-                    pageSize: 9,
-                  }}
-                  dataSource={source_list}
-                  renderItem={(item,index) => (
-                    <List.Item
-                      key={index}
-                      className={style.listItem}
+            <List
+              grid={{
+                gutter: 24,
+                xs: 1,
+                sm: 2,
+                md: 3,
+                lg: 3,
+                xl: 3,
+                xxl: 3,
+              }}
+              pagination={{
+                onChange: page => {
+                  console.log(page);
+                },
+                pageSize: 9,
+                hideOnSinglePage: true,
+              }}
+              className={style.list}
+              // loading={source_list.length >0 ?:truefalse}
+              dataSource={source_list}
+              renderItem={(item, index) => (
+                <List.Item
+                  key={index}
+                  className={style.listItem}
+                >
+                  <Col xs={8} sm={8} md={8} lg={8} xl={8}>
+                    <Card
+                      bodyStyle={{
+                        height: 200,
+                        overflow: 'hidden',
+                      }}
+                      style={{ width: 320, cursor: 'pointer' }}
+                      actions={[
+                        <Tooltip title='分享'>
+                          <LinkOutlined />
+                        </Tooltip>,
+                        <Tooltip title='前往'>
+                          <EyeOutlined onClick={() => {
+                            this.locationChage(item.source_url);
+                          }} />
+                        </Tooltip>,
+                      ]}
+                      className={style.card}
                     >
-                      <Col xs={8} sm={8} md={8} lg={8} xl={8}>
-                        <Card
-                          bodyStyle={{
-                            height:200,
-                            overflow:'hidden'
-                          }}
-                          style={{ width: 320 }}
-                          actions={[
-                            <Tooltip title='分享'>
-                              <LinkOutlined />
-                            </Tooltip>,
-                            <Tooltip title='前往'>
-                              <EyeOutlined onClick={()=>{this.locationChage(item.source_url)}} />
-                            </Tooltip>
-                          ]}
-                          className={style.card}
-                        >
-                          <Link to={`/source/${item.source_id}`}>
-                            <Meta
-                              avatar={<Avatar src={item.author_avatar}/>}
-                              title={item.source_title}
-                              description={item.source_desc}
-                            />
-                          </Link>
-                        </Card>
-                      </Col>
-                    </List.Item>
-                  )}
-                />
-              </Row>
-            </div>
+                      <Link to={`/source/${item.source_id}`}>
+                        <Meta
+                          avatar={<Avatar src={item.author_avatar} />}
+                          title={item.source_title}
+                          description={item.source_desc}
+                        />
+                      </Link>
+                    </Card>
+                  </Col>
+                </List.Item>
+              )}
+            />
           </Col>
           <Col xs={6} sm={6} md={6} lg={6} xl={6}>
             <Col xs={8} sm={8} md={8} lg={8} xl={8}>

@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Avatar, Button, Drawer, Form, Input, Layout, Popover, Select, Tooltip } from 'antd';
+import { Avatar, Button, Drawer, Form, Input, Layout, Menu, Popover, Select, Tooltip } from 'antd';
 import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import style from './index.css';
-import Sider from '../../components/Sider';
+
 import Content from '../../components/Content';
 import { Link } from 'umi';
 import store from 'store';
@@ -10,7 +10,7 @@ import { get_info, get_source_list, insert_source } from '../../service/service'
 
 const { Search } = Input;
 const { Option } = Select;
-
+const {Sider} = Layout
 class Index extends PureComponent {
   state = {
     isLogin: false,
@@ -77,6 +77,14 @@ class Index extends PureComponent {
     )
   };
 
+  handleClick=(value)=>{
+    get_source_list({section:value.key}).then((res) => {
+      this.setState({
+        section_list: res.section_list,
+        source_list: res.source_list,
+      });
+    })
+  }
   render() {
     const { isLogin, user_name, user_avatar, visible, section_list, source_list } = this.state;
 
@@ -84,7 +92,33 @@ class Index extends PureComponent {
       <>
         {
           source_list && <Layout hasSider>
-            <Sider />
+            <Sider
+              style={{
+                backgroundColor: '#fff',
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                bottom: 0,
+                marginTop: 60,
+              }}
+            >
+              <Menu
+                onClick={this.handleClick}
+                style={{ width: 200, height: '100%' }}
+                defaultSelectedKeys={['91']}
+                defaultOpenKeys={['91']}
+                mode='inline'
+              >
+                <Menu.Item key='91'>推荐</Menu.Item>
+                {
+                  section_list.map((item,index)=>{
+                    return(
+                      <Menu.Item key={Object.keys(item)[0]}>{Object.values(item)[0]}</Menu.Item>
+                    )
+                  })
+                }
+              </Menu>
+            </Sider>
             <Layout style={{ marginLeft: 200, marginTop: 65 }}>
               <div className={style.header}>
                 <div className={style.logoBox}>
@@ -189,11 +223,11 @@ class Index extends PureComponent {
               <Content section_list={section_list} source_list={source_list} />
               <div className={style.footer}>
                 <div>
-                  <Tooltip title='Tooltip will show on mouse enter.'>
-                    <span>联系作者</span>
+                  <Tooltip  title='qq:2865437316'>
+                    <span style={{margin:10}}>联系作者</span>
                   </Tooltip>
                   <Tooltip title='本站仅为网址导航，网站来源于网络，对其内容不负任何责任，若有问题，请联系我'>
-                    <span>免责声明</span>
+                    <span style={{margin:10}}>免责声明</span>
                   </Tooltip>
                 </div>
                 <div>
