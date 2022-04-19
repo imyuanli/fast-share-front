@@ -16,6 +16,11 @@ export default defineConfig({
       exact: true,
       title: '登录',
     },
+    { path: '/user',
+      component: '@/pages/user',
+      exact: true,
+      title: '个人中心',
+    },
   ],
   fastRefresh: {},
 });

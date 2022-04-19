@@ -20,3 +20,11 @@ export async function insert_source(payload) {
 export async function get_source_list(payload) {
   return request.get(BASE_URL + '/api/get_source_list/', payload)
 }
+export async function update_info(payload) {
+  return request.get(BASE_URL + '/api/update_info/', payload)
+}
+
+export async function get_single_source(payload) {
+  return request.get(BASE_URL + '/api/get_single_source/', payload)
+}
+
