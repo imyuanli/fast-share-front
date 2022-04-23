@@ -15,7 +15,9 @@ export default class Index extends PureComponent {
   };
 
   componentDidMount() {
-    get_single_source({ source_id: 1 }).then(
+    const {match:{params}} = this.props
+    const source_id  = params.id
+    get_single_source({ source_id}).then(
       (res) => {
         this.setState({
           source:res.source_list,
