@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Avatar, Card, Col, List, Row, Tooltip } from 'antd';
+import { Avatar, Card, Col, List, Row, Tag, Tooltip } from 'antd';
 import { EyeOutlined, LinkOutlined } from '@ant-design/icons';
 import style from './index.css';
-import { Link } from 'umi';
+import { history } from 'umi';
 
 const { Meta } = Card;
 
@@ -13,11 +13,24 @@ class Index extends PureComponent {
     window.returnValue = false;
   };
 
+  getSection=(section)=>{
+    const {section_list } = this.props;
+    let section_name = ""
+    section_list.map((item)=>{
+      if(Object.keys(item)[0] == section){
+        section_name =  Object.values(item)[0]
+      }
+    })
+    return section_name
+  }
   render() {
     const { source_list } = this.props;
+    const colorArr = ["magenta","red",
+        "volcano","orange",
+        "gold","lime","green","cyan","blue","geekblue","purple"]
     return (
       <div className={style.content}>
-        <Row gutter={24} style={{ margin: "10 0 0 0" }}>
+        <Row gutter={24} style={{ margin: '10 0 0 0' }}>
           <Col xs={18} sm={18} md={18} lg={18} xl={18}>
             <List
               grid={{
@@ -49,6 +62,8 @@ class Index extends PureComponent {
                       bodyStyle={{
                         height: 200,
                         overflow: 'hidden',
+                        display: 'flex',
+                        flexDirection: 'column',
                       }}
                       style={{ width: 320, cursor: 'pointer' }}
                       actions={[
@@ -63,13 +78,27 @@ class Index extends PureComponent {
                       ]}
                       className={style.card}
                     >
-                      <Link to={`/source/${item.source_id}`}>
+                      <div style={{ height: '100%' }} onClick={
+                        () => {
+                          history.push(`/${item.source_id}`);
+                        }
+                      }>
                         <Meta
-                          avatar={<Avatar src={item.author_avatar} />}
+                          avatar={<img alt=''
+                                       style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: '50%' }}
+                                       src={item.author_avatar} />}
                           title={item.source_title}
                           description={item.source_desc}
+                          style={{ height: '100%' }}
                         />
-                      </Link>
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        padding: '0 20px',
+                      }}>
+                        <Tag color={colorArr[item.source_section]}>{this.getSection(item.source_section)}</Tag>
+                      </div>
                     </Card>
                   </Col>
                 </List.Item>

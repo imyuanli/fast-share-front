@@ -21,6 +21,12 @@ export default defineConfig({
       exact: true,
       title: '个人中心',
     },
+    {
+      path: '/:id',
+      component: '@/pages/dashboard/[id]',
+      exact: true,
+      title: '首页',
+    },
   ],
   fastRefresh: {},
 });
