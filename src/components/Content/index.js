@@ -77,10 +77,6 @@ class Index extends PureComponent {
                       }}
                       style={{ width: 320, cursor: 'pointer' }}
                       actions={[
-                        <Tooltip title='收藏'>
-                          {/*<HeartTwoTone twoToneColor="#eb2f96" />*/}
-                          <HeartOutlined twoToneColor="#eb2f96" onClick={()=>this.getLikeCollection(item)} />
-                        </Tooltip>,
                         <Tooltip title='分享'>
                           <LinkOutlined />
                         </Tooltip>,
@@ -97,7 +93,6 @@ class Index extends PureComponent {
                           history.push(`/${item.source_id}`);
                         }
                       }>
-                        {item.source_id}
                         <Meta
                           avatar={<img alt=''
                                        style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: '50%' }}

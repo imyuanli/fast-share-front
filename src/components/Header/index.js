@@ -177,7 +177,7 @@ export default class Index extends PureComponent {
               <Select
                 showSearch
                 value={this.state.value}
-                placeholder={'搜索一点东西吧'}
+                placeholder={'搜索一下吧'}
                 style={{
                   width:'200px',
                 }}

@@ -58,7 +58,7 @@ class Index extends PureComponent {
                 defaultOpenKeys={['91']}
                 mode='inline'
               >
-                <Menu.Item key='91'>推荐</Menu.Item>
+                <Menu.Item key='91'>全部</Menu.Item>
                 {
                   section_list.map((item, index) => {
                     return (
