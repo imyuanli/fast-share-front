@@ -27,4 +27,16 @@ export async function update_info(payload) {
 export async function get_single_source(payload) {
   return request.get(BASE_URL + '/api/get_single_source/', payload)
 }
+export async function get_collection(payload) {
+  return request.post(BASE_URL + '/api/get_collection/', payload)
+}
+export async function get_is_published(payload) {
+  return request.post(BASE_URL + '/api/get_is_published/', payload)
+}
+export async function update_published(payload) {
+  return request.post(BASE_URL + '/api/update_published/', payload)
+}
+export async function delete_published(payload) {
+  return request.post(BASE_URL + '/api/delete_published/', payload)
+}
 

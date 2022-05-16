@@ -89,7 +89,6 @@ export default class Index extends PureComponent {
               >
                 <Form layout='vertical'
                       hideRequiredMark
-
                       initialValues={{ remember: true }}
                       onFinish={this.onFinish}
                 >

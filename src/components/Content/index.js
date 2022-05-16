@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
 import { Avatar, Card, Col, List, Row, Tag, Tooltip } from 'antd';
-import { EyeOutlined, LinkOutlined } from '@ant-design/icons';
+import { EyeOutlined, HeartOutlined, HeartTwoTone, LinkOutlined } from '@ant-design/icons';
 import style from './index.css';
 import { history } from 'umi';
+import { get_collection } from '../../service/service';
 
 const { Meta } = Card;
 
@@ -22,6 +23,15 @@ class Index extends PureComponent {
       }
     })
     return section_name
+  }
+
+  //收藏
+  getLikeCollection=(item)=>{
+    get_collection({source_id:item.source_id}).then(
+      (res)=>{
+        console.log(res);
+      }
+    )
   }
   render() {
     const { source_list } = this.props;
@@ -67,6 +77,10 @@ class Index extends PureComponent {
                       }}
                       style={{ width: 320, cursor: 'pointer' }}
                       actions={[
+                        <Tooltip title='收藏'>
+                          {/*<HeartTwoTone twoToneColor="#eb2f96" />*/}
+                          <HeartOutlined twoToneColor="#eb2f96" onClick={()=>this.getLikeCollection(item)} />
+                        </Tooltip>,
                         <Tooltip title='分享'>
                           <LinkOutlined />
                         </Tooltip>,
