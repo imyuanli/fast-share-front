@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Avatar, Button, Card, Col, Drawer, Form, Input, message, Modal, Row, Select, Table } from 'antd';
+import { Avatar, Button, Card, Col, Drawer, Form, Input, message, Modal, Row, Select, Table, Tag } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import {
   delete_published,
@@ -189,6 +189,9 @@ export default class Index extends PureComponent {
       accept: 'image/png, image/jpeg',
       onChange: this.onChange,
     };
+    const colorArr = ["magenta","red",
+      "volcano","orange",
+      "gold","lime","green","cyan","blue","geekblue","purple"]
     const columns = [
       {
         title: '资源标题',
@@ -201,7 +204,7 @@ export default class Index extends PureComponent {
         key: 'source_section',
         render: (item) => {
           return (
-            <span>{this.getSection(item)}</span>
+            <span>{<Tag color={colorArr[item]}>{this.getSection(item)}</Tag>}</span>
           );
         },
       },
@@ -221,12 +224,13 @@ export default class Index extends PureComponent {
         key: 'source_url',
         render: (item, recode) => (
           <>
-            <Button type={'default'} onClick={() => this.showDrawer(recode)} style={{ margin: 5 }}>编辑</Button>
+            <Button type={'primary'} onClick={() => this.showDrawer(recode)} style={{ margin: 5 }}>编辑</Button>
             <Button type={'danger'} onClick={() => this.deleteSource(recode)} style={{ margin: 5 }}>删除</Button>
           </>
         ),
       },
     ];
+
     return (
       <div>
         <Header />

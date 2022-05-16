@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Avatar, Button, Drawer, Form, Input, message, Popover, Select } from 'antd';
+import { Avatar, Button, Drawer, Form, Input, message, Popover, Select, Tag } from 'antd';
 import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import { Link,history } from 'umi';
 import style from '../../pages/dashboard/index.css';
 import store from 'store';
-import { get_info, get_source_list, insert_source } from '../../service/service';
+import { get_info, get_source_list, insert_source, search_source } from '../../service/service';
 const { Search } = Input;
 const { Option } = Select;
 export default class Index extends PureComponent {
@@ -13,6 +13,8 @@ export default class Index extends PureComponent {
     user_name: '',
     user_avatar: '',
     visible: false,
+    search_list: [],
+    value: undefined,
   };
 
   componentDidMount() {
@@ -32,8 +34,6 @@ export default class Index extends PureComponent {
       });
     });
   }
-
-  onSearch = value => console.log(value);
 
   signOut = () => {
     store.remove('token');
@@ -70,8 +70,43 @@ export default class Index extends PureComponent {
     );
   };
 
+
+  handleSearch = value => {
+    if (value) {
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+        this.timeout = null;
+      }
+      this.timeout = setTimeout(
+        ()=>{
+          search_source({q:value}).then(
+            (res)=>{
+              this.setState({
+                search_list:res.search_list
+              })
+            }
+          )
+      }, 300)
+    } else {
+      this.setState({ search_list: [] });
+    }
+  };
+
+  handleChange = value => {
+
+    window.location.href = `/${value}`
+  };
+
+  handleBlur=()=>{
+    this.setState({ search_list: [] });
+  }
   render() {
     const { isLogin, user_name, user_avatar, visible, section_list } = this.state;
+    const options = this.state.search_list.map(d =>
+      <Option key={d.source_id}>
+        {d.source_title}
+      </Option>
+    )
     return (
       <>
         {
@@ -139,13 +174,24 @@ export default class Index extends PureComponent {
               </Drawer>
             </div>
             <div>
-              <Search
-                placeholder='input search text'
-                allowClear
-                enterButton='Search'
-                size='large'
-                onSearch={this.onSearch}
-              />
+              <Select
+                showSearch
+                value={this.state.value}
+                placeholder={'搜索一点东西吧'}
+                style={{
+                  width:'200px',
+                }}
+                allowClear={true}
+                defaultActiveFirstOption={false}
+                showArrow={false}
+                filterOption={false}
+                onSearch={this.handleSearch}
+                onChange={this.handleChange}
+                notFoundContent={null}
+                onBlur={this.handleBlur}
+              >
+                {options}
+              </Select>
             </div>
             <div className={style.popover}>
               <Popover
@@ -179,7 +225,6 @@ export default class Index extends PureComponent {
           </div>
         }
       </>
-
     );
   }
 }

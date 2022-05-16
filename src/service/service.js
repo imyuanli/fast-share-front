@@ -40,3 +40,6 @@ export async function delete_published(payload) {
   return request.post(BASE_URL + '/api/delete_published/', payload)
 }
 
+export async function search_source(payload) {
+  return request.get(BASE_URL + '/api/search_source/', payload)
+}
