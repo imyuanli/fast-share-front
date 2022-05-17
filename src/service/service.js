@@ -43,3 +43,10 @@ export async function delete_published(payload) {
 export async function search_source(payload) {
   return request.get(BASE_URL + '/api/search_source/', payload)
 }
+export async function insert_comment(payload) {
+  return request.post(BASE_URL + '/api/insert_comment/', payload)
+}
+export async function get_comment_list(payload) {
+  return request.get(BASE_URL + '/api/get_comment_list/', payload)
+}
+

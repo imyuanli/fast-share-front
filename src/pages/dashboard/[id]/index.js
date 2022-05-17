@@ -1,30 +1,50 @@
 import React, { PureComponent } from 'react';
-import { Avatar, Card, Col, Comment, Form, Row, Tag, Tooltip } from 'antd';
+import { Avatar, Button, Card, Col, Comment, Empty, Form, Input, Modal, Row, Tag, Tooltip } from 'antd';
 import style from './index.css'
-import { get_single_source } from '../../../service/service';
+import { get_comment_list, get_info, get_single_source, insert_comment } from '../../../service/service';
 import  Header from '../../../components/Header';
 import moment from 'moment'
-
+import { CommentOutlined } from '@ant-design/icons';
+const { TextArea } = Input;
 const { Meta } = Card;
 export default class Index extends PureComponent {
   state = {
     user_name: '',
     user_avatar: '',
     source:"",
-    section_list:''
+    section_list:'',
+    isShow:false,
+    comment_list: [],
+    comments:[],
+    submitting: false,
+    value: '',
+    pre_comment_id:'',
+    source_id:'',
+
   };
 
   componentDidMount() {
     const {match:{params}} = this.props
-    const source_id  = params.id
+    const source_id = params.id
     get_single_source({ source_id}).then(
       (res) => {
         this.setState({
           source:res.source_list,
-          section_list:res.section_list
+          section_list:res.section_list,
+          source_id:source_id
         })
       },
     );
+    get_info().then(
+      (res) => {
+        this.setState({
+          user_name:res.user_name,
+          user_avatar:res.user_avatar,
+          source_id:source_id
+        })
+      },
+    );
+   this.getCommentList(source_id)
   }
   getSection=(section)=>{
     const {section_list } = this.state;
@@ -37,8 +57,81 @@ export default class Index extends PureComponent {
     return section_name
   }
 
+  showComment=(pre_comment_id)=>{
+    this.setState({
+      isShow:true,
+      pre_comment_id:pre_comment_id
+    })
+  }
+
+  closeComment=()=>{
+    this.setState({
+      isShow:false
+    })
+  }
+
+  getCommentList=(source_id)=>{
+    get_comment_list({source_id:source_id}).then(
+      (res)=>{
+        if (res.comment_list){
+          this.setState({
+            comment_list:res.comment_list,
+            comments:res.comment
+          })
+        }
+      }
+    )
+  }
+  handleSubmit = () => {
+    const {
+      value,
+      pre_comment_id,
+      source_id,
+    } = this.state;
+    if (!value) {
+      return;
+    }
+    this.setState({
+      submitting: true,
+    });
+    setTimeout(() => {
+       let newComments  = {
+        comment_content:value,
+        pre_comment_id:pre_comment_id,
+        article_id:source_id
+      }
+      insert_comment(newComments).then(
+        (res)=>{
+          if(res){
+            this.setState({
+              submitting: false,
+              value: ""
+            },()=>{
+              this.getCommentList(source_id)
+              this.closeComment()
+            });
+          }
+        })
+    }, 500);
+  };
+
+  handleChange = e => {
+    this.setState({
+      value: e.target.value,
+    });
+  };
+
+  //获取父级的评论名字
+  getPreComment=(pre_id)=>{
+    const { comments } = this.state
+    for(let item of comments){
+      if(item.id == pre_id){
+        return item.author
+      }
+    }
+  }
   render() {
-    const {source} = this.state;
+    const {source,isShow,submitting,value,comment_list} = this.state;
     const colorArr = ["magenta","red",
       "volcano","orange",
       "gold","lime","green","cyan","blue","geekblue","purple"]
@@ -49,8 +142,26 @@ export default class Index extends PureComponent {
             <div style={{height:80}}>
               <Header />
             </div>
+            <Modal
+              title="想要发表什么呢"
+              visible={isShow}
+              onOk={this.showComment}
+              onCancel={this.closeComment }
+              footer={null}
+            >
+              <div  style={{
+                display: "flex",
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+              }}>
+                <TextArea style={{marginBottom:20}} rows={4} onChange={this.handleChange} value={value} />
+                <Button htmlType="submit" loading={submitting} onClick={this.handleSubmit} type="primary">
+                  发送
+                </Button>
+              </div>
+            </Modal>
             <Row gutter={24} style={{ margin: '10 0 0 0' }}>
-              <Col xs={18} sm={18} md={18} lg={18} xl={18}>
+              <Col xs={18} sm={18} md={18} lg={18} xl={18} style={{margin:'0 0 24px 24px'}}>
                 <Card
                   bodyStyle={{
                     display:'flex',
@@ -80,40 +191,72 @@ export default class Index extends PureComponent {
                     alignItems:'flex-start',
                     flexDirection:'column'
                   }}
-
+                  extra={<Button onClick={this.showComment} icon={<CommentOutlined />} type={'primary'}>发表评论</Button>}
                   title="评论"
                 >
-                  <Comment
-                    author={<a>Han Solo</a>}
-                    avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
-                    content={
-                      <p>
-                        你好
-                      </p>
-                    }
-                    datetime={
-                      <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                        <span>{moment().fromNow()}</span>
-                      </Tooltip>
-                    }
-                  />
-                  <Comment
-                    author={<a>Han Solo</a>}
-                    avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
-                    content={
-                      <p>
-                        你好
-                      </p>
-                    }
-                    datetime={
-                      <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                        <span>{moment().fromNow()}</span>
-                      </Tooltip>
-                    }
-                  />
+                  {
+                    comment_list.length > 0 ?
+                      comment_list.map((item,index)=>{
+                      return(
+                       <>
+                         {
+                           <Comment
+                             actions={[<span key="comment-nested-reply-to" onClick={()=>this.showComment(item.id)}>回复</span>]}
+                             author={item.author}
+                             avatar={<Avatar src={item.avatar} alt="" />}
+                             content={
+                               <p>
+                                 {item.content}
+                               </p>
+                             }
+                             datetime={
+                               <Tooltip title={moment(item.datetime).format('YYYY-MM-DD HH:mm:ss')}>
+                                 <span>{moment(item.datetime).fromNow()}</span>
+                               </Tooltip>
+                             }
+                           >
+                             {
+                               item.children.length > 0
+                               &&
+                               item.children.map((item_child,index)=>{
+                                 return(
+                                   <Comment
+                                     actions={[<span key="comment-nested-reply-to"
+                                                     onClick={() => this.showComment(item_child.id)}>回复</span>]}
+                                     author={`${item_child.author} 回复给 ${this.getPreComment(item_child['pre_id'])}`}
+                                     avatar={<Avatar src={item_child.avatar} alt="" />}
+                                     content={
+                                       <p>
+                                         {item_child.content}
+                                       </p>
+                                     }
+                                     datetime={
+                                       <Tooltip title={moment(item_child.datetime).format('YYYY-MM-DD HH:mm:ss')}>
+                                         <span>{moment(item_child.datetime).fromNow()}</span>
+                                       </Tooltip>
+                                     }
+                                   />
+                                 )
+                               })
+                             }
+                           </Comment>
+                         }
+                       </>
+                      )
+                    })
+                      :
+                      <div style={{
+                        display:'flex',
+                        justifyContent:'center',
+                        alignItems:'center',
+                        width:'100%'
+                      }}>
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'暂无评论'} />
+                      </div>
+                  }
                 </Card>
               </Col>
-              <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+              <Col xs={12} sm={12} md={5} lg={5} xl={5}>
                 <Col xs={8} sm={8} md={8} lg={8} xl={8}>
                   <Card
                     style={{ width: 300 }}
@@ -128,11 +271,11 @@ export default class Index extends PureComponent {
                     文章
                   </Card>
                 </Col>
-              </Col>
+              </Col >
             </Row>
           </div>
         }
       </>
-    );
+    )
   }
 }
