@@ -1,13 +1,17 @@
 import React, { PureComponent } from 'react';
-import { Avatar, Card, Col, List, Row, Tag, Tooltip } from 'antd';
+import { Avatar, Card, Col, List, message, Row, Tag, Tooltip } from 'antd';
 import { EyeOutlined, HeartOutlined, HeartTwoTone, LinkOutlined } from '@ant-design/icons';
 import style from './index.css';
 import { history } from 'umi';
 import { get_collection } from '../../service/service';
-
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 const { Meta } = Card;
 
 class Index extends PureComponent {
+
+  state={
+    copy_url:''
+  }
 
   locationChage = (url) => {
     window.location.href = url;
@@ -32,6 +36,10 @@ class Index extends PureComponent {
         console.log(res);
       }
     )
+  }
+
+  shareUrl=()=>{
+
   }
   render() {
     const { source_list } = this.props;
@@ -77,9 +85,14 @@ class Index extends PureComponent {
                       }}
                       style={{ width: 320, cursor: 'pointer' }}
                       actions={[
-                        <Tooltip title='分享'>
-                          <LinkOutlined />
-                        </Tooltip>,
+                        <CopyToClipboard text={item.source_url}
+                                         onCopy={() => {
+                                           message.success('复制成功~')
+                                         }}>
+                          <Tooltip title='分享'>
+                            <LinkOutlined onClick={this.shareUrl} />
+                          </Tooltip>
+                        </CopyToClipboard>,
                         <Tooltip title='前往'>
                           <EyeOutlined onClick={() => {
                             this.locationChage(item.source_url);
