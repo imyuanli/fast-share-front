@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
-import { Avatar, Button, Card, Col, Comment, Empty, Form, Input, Modal, Row, Tag, Tooltip } from 'antd';
+import { Avatar, Button, Card, Col, Comment, Empty, Form, Input, message, Modal, Row, Tag, Tooltip } from 'antd';
 import style from './index.css'
 import { get_comment_list, get_info, get_single_source, insert_comment } from '../../../service/service';
 import  Header from '../../../components/Header';
 import moment from 'moment'
-import { CommentOutlined } from '@ant-design/icons';
+import { CommentOutlined, EyeOutlined, LinkOutlined } from '@ant-design/icons';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { history } from '../../../.umi/core/history';
 const { TextArea } = Input;
 const { Meta } = Card;
 export default class Index extends PureComponent {
@@ -20,7 +22,7 @@ export default class Index extends PureComponent {
     value: '',
     pre_comment_id:'',
     source_id:'',
-
+    recommend_list:''
   };
 
   componentDidMount() {
@@ -31,7 +33,8 @@ export default class Index extends PureComponent {
         this.setState({
           source:res.source_list,
           section_list:res.section_list,
-          source_id:source_id
+          source_id:source_id,
+          recommend_list:res.recommend_list
         })
       },
     );
@@ -131,7 +134,7 @@ export default class Index extends PureComponent {
     }
   }
   render() {
-    const {source,isShow,submitting,value,comment_list} = this.state;
+    const {source,isShow,recommend_list,submitting,value,comment_list} = this.state;
     const colorArr = ["magenta","red",
       "volcano","orange",
       "gold","lime","green","cyan","blue","geekblue","purple"]
@@ -257,20 +260,62 @@ export default class Index extends PureComponent {
                 </Card>
               </Col>
               <Col xs={12} sm={12} md={5} lg={5} xl={5}>
-                <Col xs={8} sm={8} md={8} lg={8} xl={8}>
-                  <Card
-                    style={{ width: 300 }}
-                    title='推荐'
-                  >
-                    文章
-                  </Card>
-                  <Card
-                    style={{ width: 300 }}
-                    title='推荐'
-                  >
-                    文章
-                  </Card>
-                </Col>
+                {
+                  recommend_list && recommend_list.map(
+                    (item,index)=>{
+                      return(
+                        <Card
+                          bodyStyle={{
+                            height: 200,
+                            overflow: 'hidden',
+                            display: 'flex',
+                            flexDirection: 'column',
+                          }}
+                          style={{ width: 320,marginBottom:10, cursor: 'pointer' }}
+                          actions={[
+                            <CopyToClipboard text={item.source_url}
+                                             onCopy={() => {
+                                               message.success('复制成功~')
+                                             }}>
+                              <Tooltip title='分享'>
+                                <LinkOutlined onClick={this.shareUrl} />
+                              </Tooltip>
+                            </CopyToClipboard>,
+                            <Tooltip title='前往'>
+                              <EyeOutlined onClick={() => {
+                                this.locationChage(item.source_url);
+                              }} />
+                            </Tooltip>,
+                          ]}
+                          className={style.card}
+                          title={'推荐'}
+                        >
+                          <div style={{ height: '100%' }} onClick={
+                            () => {
+                              history.push(`/${item.source_id}`);
+                            }
+                          }>
+                            <Meta
+                              avatar={<img alt=''
+                                           style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: '50%' }}
+                                           src={item.author_avatar} />}
+                              title={item.source_title}
+                              description={item.source_desc}
+                              style={{ height: '100%' }}
+                            />
+                          </div>
+                          <div style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            padding: '0 20px',
+                          }}>
+                            <Tag color={colorArr[item.source_section]}>{this.getSection(item.source_section)}</Tag>
+                          </div>
+                        </Card>
+                      )
+                    }
+                  )
+                }
               </Col >
             </Row>
           </div>
