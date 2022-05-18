@@ -131,13 +131,21 @@ class Index extends PureComponent {
           <Col xs={6} sm={6} md={6} lg={6} xl={6}>
             <Col xs={8} sm={8} md={8} lg={8} xl={8}>
               <Card
+                style={{ width: 300,marginBottom:20 }}
+                title='关于站长'
+              >
+                <Meta
+                  avatar={<Avatar src='https://joeschmoe.io/api/v1/random' />}
+                  title='imyuanli'
+                  description='我是一名大四即将毕业的学生，目的就是在于做一个能够帮助到大家的网站'
+                />
+              </Card>
+              <Card
                 style={{ width: 300 }}
                 title='关于快分享'
               >
                 <Meta
-                  avatar={<Avatar src='https://joeschmoe.io/api/v1/random' />}
-                  title='Card title'
-                  description='This is the description'
+                  description='由我个人独立开发的一个免费分享资源的网络在线平台，欢迎大家提意见'
                 />
               </Card>
             </Col>
