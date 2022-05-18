@@ -40,6 +40,9 @@ export default class Index extends PureComponent {
     this.setState({ isLogin: false });
   };
   showDrawer = () => {
+    if (!store.get('token')) {
+      history.push(`/login?redirect=${window.location.href}`)
+    }
     this.setState({
       visible: true,
     });

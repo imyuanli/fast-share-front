@@ -7,6 +7,7 @@ import moment from 'moment'
 import { CommentOutlined, EyeOutlined, LinkOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { history } from '../../../.umi/core/history';
+import store from 'store';
 const { TextArea } = Input;
 const { Meta } = Card;
 export default class Index extends PureComponent {
@@ -61,9 +62,12 @@ export default class Index extends PureComponent {
   }
 
   showComment=(pre_comment_id)=>{
+    if (!store.get('token')) {
+      history.push(`/login?redirect=${window.location.href}`)
+    }
     this.setState({
       isShow:true,
-      pre_comment_id:pre_comment_id
+      pre_comment_id:pre_comment_id ? pre_comment_id:''
     })
   }
 
@@ -148,7 +152,7 @@ export default class Index extends PureComponent {
             <Modal
               title="想要发表什么呢"
               visible={isShow}
-              onOk={this.showComment}
+              onOk={()=>{this.showComment()}}
               onCancel={this.closeComment }
               footer={null}
             >
@@ -194,7 +198,7 @@ export default class Index extends PureComponent {
                     alignItems:'flex-start',
                     flexDirection:'column'
                   }}
-                  extra={<Button onClick={this.showComment} icon={<CommentOutlined />} type={'primary'}>发表评论</Button>}
+                  extra={<Button onClick={()=>{this.showComment()}} icon={<CommentOutlined />} type={'primary'}>发表评论</Button>}
                   title="评论"
                 >
                   {
@@ -271,6 +275,7 @@ export default class Index extends PureComponent {
                             display: 'flex',
                             flexDirection: 'column',
                           }}
+
                           style={{ width: 320,marginBottom:10, cursor: 'pointer' }}
                           actions={[
                             <CopyToClipboard text={item.source_url}
@@ -292,7 +297,7 @@ export default class Index extends PureComponent {
                         >
                           <div style={{ height: '100%' }} onClick={
                             () => {
-                              history.push(`/${item.source_id}`);
+                              window.location.href = `/${item.source_id}`;
                             }
                           }>
                             <Meta

@@ -48,7 +48,7 @@ function request(url, data = {}, method = 'GET') {
             title: '提示',
             content: res.data.errmsg,
           });
-          history.push('/login')
+          history.push(`/login?redirect=${window.location.href}`)
         }
       }
     }).catch(err => {

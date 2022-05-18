@@ -29,14 +29,6 @@ class Index extends PureComponent {
     return section_name
   }
 
-  //收藏
-  getLikeCollection=(item)=>{
-    get_collection({source_id:item.source_id}).then(
-      (res)=>{
-        console.log(res);
-      }
-    )
-  }
 
   shareUrl=()=>{
 
@@ -68,7 +60,6 @@ class Index extends PureComponent {
                 hideOnSinglePage: true,
               }}
               className={style.list}
-              // loading={source_list.length >0 ?:truefalse}
               dataSource={source_list}
               renderItem={(item, index) => (
                 <List.Item

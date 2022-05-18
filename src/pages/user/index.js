@@ -239,9 +239,6 @@ export default class Index extends PureComponent {
             <Col xs={24} sm={24} md={5} lg={5} xl={5} style={{ marginBottom: 10 }}>
               <Card
                 style={{ width: '100%', marginTop: 16 }}
-                actions={[
-                  <EditOutlined onClick={this.onClick} key='edit' />,
-                ]}
                 title={'个人信息'}
               >
                 <Meta

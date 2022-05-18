@@ -15,7 +15,7 @@ export default class Index extends PureComponent {
     timer: 60 ,
   };
   componentDidMount() {
-
+    window.location.href = '/'
   }
 
   onChange = () => {
@@ -36,8 +36,14 @@ export default class Index extends PureComponent {
     get_login({email,login_code}).then((res)=>{
       if(res){
         store.set("token",res.token)
-        history.push("/")
-      }
+        const {location:{query:{redirect}}} = this.props
+          if(redirect){
+            window.location.href = redirect
+          }
+          else{
+            window.location.href = '/'
+          }
+        }
     })
   };
 
@@ -68,7 +74,7 @@ export default class Index extends PureComponent {
 
     get_login_code({email}).then(
       (res)=>{
-        console.log(res);
+
       }
     )
   };
