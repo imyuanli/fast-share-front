@@ -15,7 +15,9 @@ export default class Index extends PureComponent {
     timer: 60 ,
   };
   componentDidMount() {
-    window.location.href = '/'
+    if(store.get("token")){
+      window.location.href = '/'
+    }
   }
 
   onChange = () => {

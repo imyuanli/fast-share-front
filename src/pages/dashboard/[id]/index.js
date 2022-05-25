@@ -137,6 +137,11 @@ export default class Index extends PureComponent {
       }
     }
   }
+
+  locationChage = (url) => {
+    window.location.href = url;
+    window.returnValue = false;
+  };
   render() {
     const {source,isShow,recommend_list,submitting,value,comment_list} = this.state;
     const colorArr = ["magenta","red",
